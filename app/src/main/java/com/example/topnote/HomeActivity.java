@@ -13,16 +13,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.topnote.Model.Data;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.sql.DatabaseMetaData;
+import java.text.DateFormat;
+import java.util.Date;
+
 public class HomeActivity extends AppCompatActivity {
 
     private FloatingActionButton fab_btn;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
 
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser mUser = mAuth.getCurrentUser();
+
+        String uid = mUser.getUid();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("AllData").child(uid);
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("TopNote");
@@ -53,9 +74,11 @@ public class HomeActivity extends AppCompatActivity {
         View mview = inflater.inflate(R.layout.add_data,null);
         mydialog.setView(mview);
 
+        final AlertDialog dialog = mydialog.create();
+
         final EditText title = mview.findViewById(R.id.title);
-        EditText budget = mview.findViewById(R.id.budget);
-        EditText note = mview.findViewById(R.id.note);
+        final EditText budget = mview.findViewById(R.id.budget);
+        final EditText note = mview.findViewById(R.id.note);
 
         Button btnSave = mview.findViewById(R.id.save_btn);
 
@@ -64,8 +87,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String mTitle = title.getText().toString().trim();
-                String mBudget = title.getText().toString().trim();
-                String mNote = title.getText().toString().trim();
+                String mBudget = budget.getText().toString().trim();
+                String mNote = note.getText().toString().trim();
 
                 if (TextUtils.isEmpty(mTitle)) {
                     title.setError("Required Field");
@@ -77,10 +100,20 @@ public class HomeActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(mNote)) {
                     title.setError("Required Field");
                 }
+
+                String id = mDatabase.push().getKey();
+
+                String date = DateFormat.getDateInstance().format(new Date());
+
+                Data mData = new Data(id, mTitle, mBudget, mNote, date);
+
+                mDatabase.child(id).setValue(mData);
+
+                dialog.dismiss();
             }
         });
 
-        AlertDialog dialog = mydialog.create();
+
 
         dialog.show();
 
