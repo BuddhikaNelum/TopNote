@@ -30,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+        }
+
         btnLogin = findViewById(R.id.login);
         btnSignUp = findViewById(R.id.signup);
 
