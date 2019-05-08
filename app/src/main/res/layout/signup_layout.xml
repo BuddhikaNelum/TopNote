@@ -37,7 +37,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:layout_margin="10dp"
             android:layout_height="wrap_content">
             <EditText
@@ -70,7 +70,7 @@
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:layout_margin="10dp"
             android:layout_height="wrap_content">
             <EditText
@@ -89,7 +89,7 @@
         android:layout_margin="10dp"
         android:background="@drawable/btn_design"
         android:text="Sign Up"
-        android:id="@+id/sign_btn"
+        android:id="@+id/signup_btn"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@android:color/white"
 
