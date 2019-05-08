@@ -1,5 +1,7 @@
 package com.example.topnote;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,16 +10,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button btnLogin;
     private Button btnSignUp;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
 
         btnLogin = findViewById(R.id.login);
         btnSignUp = findViewById(R.id.signup);
@@ -43,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         View myview = inflater.inflate(R.layout.reg_log_input_layout, null);
         mydialog.setView(myview);
 
-        AlertDialog dialog = mydialog.create();
+        final AlertDialog dialog = mydialog.create();
 
         final EditText email = myview.findViewById(R.id.email_login);
         final EditText pass = myview.findViewById(R.id.password_login);
@@ -65,6 +76,16 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                mAuth.signInWithEmailAndPassword(mEmail,mPass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(),"Login Success",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                            dialog.dismiss();
+                        }
+                    }
+                });
             }
         });
 
@@ -77,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         View myview = inflater.inflate(R.layout.signup_layout, null);
         mydialog.setView(myview);
 
-        AlertDialog dialog = mydialog.create();
+        final AlertDialog dialog = mydialog.create();
 
         final EditText email = myview.findViewById(R.id.email_login);
         final EditText pass = myview.findViewById((R.id.password_login));
@@ -96,6 +117,17 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(mpass)) {
                     pass.setError("Password Required");
                 }
+
+                mAuth.createUserWithEmailAndPassword(mEmail,mpass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(),"Resgistration Complete",Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+                            dialog.dismiss();
+                        }
+                    }
+                });
             }
         });
 
