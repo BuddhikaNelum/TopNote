@@ -1,5 +1,6 @@
 package com.example.topnote;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.topnote.Model.Data;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -117,5 +120,58 @@ public class HomeActivity extends AppCompatActivity {
 
         dialog.show();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Data, MyviewHolder> adapter = new FirebaseRecyclerAdapter<Data, MyviewHolder>(
+                Data.class,
+                R.layout.showdata,
+                MyviewHolder.class,
+                mDatabase
+        ) {
+            @Override
+            protected void populateViewHolder(MyviewHolder viewHolder, Data model, int position) {
+
+                viewHolder.setTitle(model.getTitle());
+                viewHolder.setNote(model.getNote());
+                viewHolder.setBudget(model.getBudget());
+                viewHolder.setDate(model.getDate());
+
+            }
+        };
+        recyclerView.setAdapter(adapter);
+    }
+
+    public static class MyviewHolder extends RecyclerView.ViewHolder {
+
+        View myView;
+
+        public MyviewHolder(@NonNull View itemView) {
+            super(itemView);
+            myView = itemView;
+        }
+
+        public void setTitle(String title) {
+            TextView mTitle = myView.findViewById(R.id.sh_title);
+            mTitle.setText(title);
+        }
+
+        public void setNote(String note) {
+            TextView mNote = myView.findViewById(R.id.sh_note);
+            mNote.setText(note);
+        }
+
+        public void setBudget(String budget) {
+            TextView mBudget = myView.findViewById(R.id.sh_budget);
+            mBudget.setText("$ "+budget);
+        }
+
+        public void setDate(String date) {
+            TextView mDate = myView.findViewById(R.id.sh_date);
+            mDate.setText(date);
+        }
     }
 }

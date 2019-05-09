@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Our Title"
+            android:maxLines="1"
             android:textAppearance="?android:textAppearanceLarge"
             android:id="@+id/sh_title"
             />
@@ -24,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Our Note"
+            android:maxLines="2"
             android:textAppearance="?android:textAppearanceMedium"
             android:id="@+id/sh_note"
             />
