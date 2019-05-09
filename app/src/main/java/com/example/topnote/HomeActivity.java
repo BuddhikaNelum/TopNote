@@ -1,5 +1,6 @@
 package com.example.topnote;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -10,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -173,5 +176,22 @@ public class HomeActivity extends AppCompatActivity {
             TextView mDate = myView.findViewById(R.id.sh_date);
             mDate.setText(date);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+       switch (item.getItemId()) {
+           case R.id.logout:
+               mAuth.signOut();
+               startActivity(new Intent(getApplicationContext(), MainActivity.class));
+               break;
+       }
+        return super.onOptionsItemSelected(item);
     }
 }
